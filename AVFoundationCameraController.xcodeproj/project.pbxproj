@@ -25,6 +25,7 @@
 		798024BB14B1A63A00989368 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 798024BA14B1A63A00989368 /* ImageIO.framework */; };
 		798024C314B1A6AB00989368 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 798024C214B1A6AB00989368 /* MainViewController.m */; };
 		798024C914B1AAFD00989368 /* AVFoundationCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = 798024C814B1AAFD00989368 /* AVFoundationCameraController.m */; };
+		7983EC3114B32425001AD1E1 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7983EC3014B32425001AD1E1 /* AssetsLibrary.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		798024C214B1A6AB00989368 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		798024C714B1AAFD00989368 /* AVFoundationCameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVFoundationCameraController.h; sourceTree = "<group>"; };
 		798024C814B1AAFD00989368 /* AVFoundationCameraController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVFoundationCameraController.m; sourceTree = "<group>"; };
+		7983EC3014B32425001AD1E1 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7983EC3114B32425001AD1E1 /* AssetsLibrary.framework in Frameworks */,
 				798024BB14B1A63A00989368 /* ImageIO.framework in Frameworks */,
 				798024B914B1A63200989368 /* QuartzCore.framework in Frameworks */,
 				798024B714B1A62900989368 /* CoreMedia.framework in Frameworks */,
@@ -97,6 +100,7 @@
 		7980247414B1A58B00989368 = {
 			isa = PBXGroup;
 			children = (
+				7983EC3014B32425001AD1E1 /* AssetsLibrary.framework */,
 				7980248914B1A58B00989368 /* AVFoundationCameraController */,
 				798024A114B1A58C00989368 /* AVFoundationCameraControllerTests */,
 				7980248214B1A58B00989368 /* Frameworks */,

@@ -7,8 +7,10 @@
 //
 
 #import <CoreMedia/CoreMedia.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import "MainViewController.h"
+
 //-----------------------------------------------------------------------------
 //Private Implementations
 //-----------------------------------------------------------------------------
@@ -42,7 +44,10 @@
     NSLog(@"%f, %@", scale, NSStringFromCGRect(rect));
 }
 
-- (void)emulatedImagePickerController:(AVFoundationCameraController *)imagePicker didFinishPickingImage:(UIImage *)image{
-    
+- (void)emulatedImagePickerController:(AVFoundationCameraController *)imagePicker didFinishPickingImage:(UIImage *)image metadata:(NSDictionary *)metadata{
+    ALAssetsLibrary *lib = [[ALAssetsLibrary alloc] init];
+    [lib writeImageToSavedPhotosAlbum:image.CGImage
+                             metadata:metadata
+                      completionBlock:nil];
 }
 @end

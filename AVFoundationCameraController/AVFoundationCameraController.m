@@ -254,7 +254,9 @@
     [CATransaction commit];
     lastPinchScale_ = pinchScale;
     
-    [self.delegate emulatedImagePickerController:self didScaledTo:scale_ viewRect:CGRectMake(fabsf(rect.origin.x / scale_), fabsf(rect.origin.y / scale_), defaultBounds_.size.width, defaultBounds_.size.height)];
+    if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didScaledTo:viewRect:)]){
+        [self.delegate emulatedImagePickerController:self didScaledTo:scale_ viewRect:CGRectMake(fabsf(rect.origin.x / scale_), fabsf(rect.origin.y / scale_), defaultBounds_.size.width, defaultBounds_.size.height)];
+    }
 }
 
 /*!
@@ -417,18 +419,16 @@
     
 	[imageOutput_ captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error)
      {
-		 CFDictionaryRef exifAttachments = CMGetAttachment( imageSampleBuffer, kCGImagePropertyExifDictionary, NULL);
-		 if (exifAttachments)
-		 {
-             // Do something with the attachments.
-             NSLog(@"attachements: %@", exifAttachments);
-		 }
-         else
-             NSLog(@"no attachments");
-         
+		 NSDictionary *exifAttachments = (__bridge NSDictionary*)CMGetAttachment(imageSampleBuffer, kCGImagePropertyExifDictionary, NULL);
          NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
          UIImage *image = [[UIImage alloc] initWithData:imageData];
-         [self.delegate emulatedImagePickerController:self didFinishPickingImage:image];
+         
+         if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didFinishPickingImage:)]){
+             [self.delegate emulatedImagePickerController:self didFinishPickingImage:image];
+         }
+         if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didFinishPickingImage:metadata:)]){
+             [self.delegate emulatedImagePickerController:self didFinishPickingImage:image metadata:exifAttachments];
+         }
 	 }];
 }
 

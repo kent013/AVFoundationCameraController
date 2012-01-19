@@ -53,6 +53,8 @@
 @end
 
 @protocol AVFoundationCameraControllerDelegate <NSObject>
+@optional
 - (void) emulatedImagePickerController:(AVFoundationCameraController *)imagePicker didFinishPickingImage:(UIImage *)image;
+- (void) emulatedImagePickerController:(AVFoundationCameraController *)imagePicker didFinishPickingImage:(UIImage *)image metadata:(NSDictionary *) metadata;
 - (void) emulatedImagePickerController:(AVFoundationCameraController *)imagePicker didScaledTo:(CGFloat) scale viewRect:(CGRect)rect;
 @end
