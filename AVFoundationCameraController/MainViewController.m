@@ -40,11 +40,11 @@
     return self;
 }
 
-- (void)emulatedImagePickerController:(AVFoundationCameraController *)imagePicker didScaledTo:(CGFloat)scale viewRect:(CGRect)rect{
+- (void)cameraController:(AVFoundationCameraController *)cameraController didScaledTo:(CGFloat)scale viewRect:(CGRect)rect{
     NSLog(@"%f, %@", scale, NSStringFromCGRect(rect));
 }
 
-- (void)emulatedImagePickerController:(AVFoundationCameraController *)imagePicker didFinishPickingImage:(UIImage *)image metadata:(NSDictionary *)metadata{
+- (void)cameraController:(AVFoundationCameraController *)cameraController didFinishPickingImage:(UIImage *)image metadata:(NSDictionary *)metadata{
     ALAssetsLibrary *lib = [[ALAssetsLibrary alloc] init];
     [lib writeImageToSavedPhotosAlbum:image.CGImage
                              metadata:metadata

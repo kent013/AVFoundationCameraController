@@ -255,7 +255,7 @@
     lastPinchScale_ = pinchScale;
     
     if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didScaledTo:viewRect:)]){
-        [self.delegate emulatedImagePickerController:self didScaledTo:scale_ viewRect:CGRectMake(fabsf(rect.origin.x / scale_), fabsf(rect.origin.y / scale_), defaultBounds_.size.width, defaultBounds_.size.height)];
+        [self.delegate cameraController:self didScaledTo:scale_ viewRect:CGRectMake(fabsf(rect.origin.x / scale_), fabsf(rect.origin.y / scale_), defaultBounds_.size.width, defaultBounds_.size.height)];
     }
 }
 
@@ -424,10 +424,10 @@
          UIImage *image = [[UIImage alloc] initWithData:imageData];
          
          if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didFinishPickingImage:)]){
-             [self.delegate emulatedImagePickerController:self didFinishPickingImage:image];
+             [self.delegate cameraController:self didFinishPickingImage:image];
          }
          if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didFinishPickingImage:metadata:)]){
-             [self.delegate emulatedImagePickerController:self didFinishPickingImage:image metadata:exifAttachments];
+             [self.delegate cameraController:self didFinishPickingImage:image metadata:exifAttachments];
          }
 	 }];
 }
