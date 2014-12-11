@@ -1,6 +1,6 @@
 //
-//  AVFoundationCameraController.h
-//  AVFoundationCameraController
+//  ENGAVFoundationCameraController.h
+//  ENGAVFoundationCameraController
 //
 //  Created by Kentaro ISHITOYA on 12/01/02.
 //  Copyright (c) 2012 Kentaro ISHITOYA. All rights reserved.
@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-@protocol AVFoundationCameraControllerDelegate;
+@protocol ENGAVFoundationCameraControllerDelegate;
 
-@interface AVFoundationCameraController : UIViewController<UIGestureRecognizerDelegate>{
+@interface ENGAVFoundationCameraController : UIView<UIGestureRecognizerDelegate>{
     __strong AVCaptureDevice *device_;
     __strong AVCaptureSession *session_;
     __strong AVCaptureStillImageOutput *imageOutput_;
@@ -28,6 +28,7 @@
     BOOL showsFlashModeButton_;
     BOOL showsCameraDeviceButton_;
     BOOL useTapToFocus_;
+    BOOL initialized_;
     
     CGPoint pointOfInterest_;
     CGRect defaultBounds_;
@@ -35,7 +36,7 @@
     CGFloat scale_;
 }
 
-@property(nonatomic, assign) id<AVFoundationCameraControllerDelegate> delegate;
+@property(nonatomic, assign) id<ENGAVFoundationCameraControllerDelegate> delegate;
 @property(nonatomic, assign) BOOL showsCameraControls;
 @property(nonatomic, assign) BOOL showsShutterButton;
 @property(nonatomic, assign) BOOL showsFlashModeButton;
@@ -47,14 +48,12 @@
 @property(nonatomic, readonly) BOOL frontFacingCameraAvailable;
 @property(nonatomic, readonly) BOOL backCameraAvailable;
 
-
-- (id) initWithFrame:(CGRect)frame;
 - (void) takePicture;
 @end
 
-@protocol AVFoundationCameraControllerDelegate <NSObject>
+@protocol ENGAVFoundationCameraControllerDelegate <NSObject>
 @optional
-- (void) cameraController:(AVFoundationCameraController *)cameraController didFinishPickingImage:(UIImage *)image;
-- (void) cameraController:(AVFoundationCameraController *)cameraController didFinishPickingImage:(UIImage *)image metadata:(NSDictionary *) metadata;
-- (void) cameraController:(AVFoundationCameraController *)cameraController didScaledTo:(CGFloat) scale viewRect:(CGRect)rect;
+- (void) cameraController:(ENGAVFoundationCameraController *)cameraController didFinishPickingImage:(UIImage *)image;
+- (void) cameraController:(ENGAVFoundationCameraController *)cameraController didFinishPickingImage:(UIImage *)image metadata:(NSDictionary *) metadata;
+- (void) cameraController:(ENGAVFoundationCameraController *)cameraController didScaledTo:(CGFloat) scale viewRect:(CGRect)rect;
 @end

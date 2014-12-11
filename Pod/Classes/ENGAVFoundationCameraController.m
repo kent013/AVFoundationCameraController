@@ -1,6 +1,6 @@
 //
-//  AVFoundationCameraController.m
-//  AVFoundationCameraController
+//  ENGAVFoundationCameraController.m
+//  ENGAVFoundationCameraController
 //
 //  Created by Kentaro ISHITOYA on 12/01/02.
 //  Copyright (c) 2012 Kentaro ISHITOYA. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import <CoreMedia/CoreMedia.h>
 #import <ImageIO/ImageIO.h>
-#import "AVFoundationCameraController.h"
+#import "ENGAVFoundationCameraController.h"
 
 #define INDICATOR_RECT_SIZE 50.0
 #define PICKER_MAXIMUM_ZOOM_SCALE 5.0 
@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 //Private Implementations
 //-----------------------------------------------------------------------------
-@interface AVFoundationCameraController(PrivateImplementation)
+@interface ENGAVFoundationCameraController(PrivateImplementation)
 - (void) setupInitialState:(CGRect)frame;
 - (void) initCamera:(AVCaptureDevice *)cameraDevice;
 - (void) handleTapGesture: (UITapGestureRecognizer *)recognizer;
@@ -37,42 +37,44 @@
 - (void) updateCameraControls;
 @end
 
-@implementation AVFoundationCameraController(PrivateImplementation)
+@implementation ENGAVFoundationCameraController(PrivateImplementation)
 /*!
  * initialize view
  */
 -(void)setupInitialState:(CGRect)frame{
-    self.view.frame = frame;
+    if(initialized_){
+        return;
+    }
+    initialized_ = YES;
+    self.frame = frame;
     pointOfInterest_ = CGPointMake(frame.size.width / 2, frame.size.height / 2);
     defaultBounds_ = frame;
     scale_ = 1.0;
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     tapRecognizer.delegate = self;
-    [self.view addGestureRecognizer:tapRecognizer];
+    [self addGestureRecognizer:tapRecognizer];
     UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
-    [self.view addGestureRecognizer:pinchRecognizer];
+    [self addGestureRecognizer:pinchRecognizer];
     
-    shutterButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [shutterButton_ setTitle:@"Shutter" forState:UIControlStateNormal]; 
-    [shutterButton_ addTarget:self action:@selector(handleShutterButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    flashModeButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [flashModeButton_ setTitle:@"Flash" forState:UIControlStateNormal];
-    [flashModeButton_ addTarget:self action:@selector(handleFlashModeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    cameraDeviceButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [cameraDeviceButton_ setTitle:@"Device" forState:UIControlStateNormal];
-    [cameraDeviceButton_ addTarget:self action:@selector(handleCameraDeviceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    if(self.showsShutterButton){
+        shutterButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [shutterButton_ setTitle:@"Shutter" forState:UIControlStateNormal];
+        [shutterButton_ addTarget:self action:@selector(handleShutterButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    if(self.showsFlashModeButton){
+        flashModeButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [flashModeButton_ setTitle:@"Flash" forState:UIControlStateNormal];
+        [flashModeButton_ addTarget:self action:@selector(handleFlashModeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    if(self.showsCameraDeviceButton){
+        cameraDeviceButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [cameraDeviceButton_ setTitle:@"Device" forState:UIControlStateNormal];
+        [cameraDeviceButton_ addTarget:self action:@selector(handleCameraDeviceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    }
     
     [self initCamera:self.backCameraDevice];
-    showsCameraControls_ = YES;
-    showsShutterButton_ = YES;
     useTapToFocus_ = YES;
-    if(device_.isTorchAvailable){
-        showsFlashModeButton_ = YES;
-    }
-    if(self.hasMultipleCameraDevices){
-        showsCameraDeviceButton_ = YES;
-    }
     [self updateCameraControls];
 }
 
@@ -120,10 +122,9 @@
     }
     
     previewLayer_ = [AVCaptureVideoPreviewLayer layerWithSession:session_];
-    previewLayer_.automaticallyAdjustsMirroring = NO;
     previewLayer_.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    previewLayer_.frame = self.view.bounds;
-    [self.view.layer addSublayer:previewLayer_];
+    previewLayer_.frame = self.bounds;
+    [self.layer addSublayer:previewLayer_];
     
     [session_ startRunning];
     
@@ -132,12 +133,12 @@
     indicatorLayer_.borderColor = [[UIColor whiteColor] CGColor];
     indicatorLayer_.borderWidth = 1.0;
     indicatorLayer_.frame = 
-    CGRectMake(self.view.bounds.size.width/2.0 - INDICATOR_RECT_SIZE/2.0,
-               self.view.bounds.size.height/2.0 - INDICATOR_RECT_SIZE/2.0,
+    CGRectMake(self.bounds.size.width/2.0 - INDICATOR_RECT_SIZE/2.0,
+               self.bounds.size.height/2.0 - INDICATOR_RECT_SIZE/2.0,
                INDICATOR_RECT_SIZE,
                INDICATOR_RECT_SIZE);
     indicatorLayer_.hidden = NO;
-    [self.view.layer addSublayer:indicatorLayer_];
+    [self.layer addSublayer:indicatorLayer_];
 }
 
 /*!
@@ -151,18 +152,18 @@
         return;
     }
     
-    CGRect f = self.view.frame;
-    if(showsShutterButton_ && [shutterButton_ isDescendantOfView:self.view] == NO){
+    CGRect f = self.frame;
+    if(showsShutterButton_ && [shutterButton_ isDescendantOfView:self] == NO){
         [shutterButton_ setFrame:CGRectMake((f.size.width - PICKER_SHUTTER_BUTTON_WIDTH) / 2    , f.size.height - PICKER_SHUTTER_BUTTON_HEIGHT - PICKER_PADDING_Y, PICKER_SHUTTER_BUTTON_WIDTH, PICKER_SHUTTER_BUTTON_HEIGHT)];
         NSLog(@"%@", NSStringFromCGRect(shutterButton_.frame));
-        [self.view addSubview: shutterButton_];
+        [self addSubview: shutterButton_];
     }
-    if(showsFlashModeButton_ && [flashModeButton_ isDescendantOfView:self.view] == NO){
+    if(showsFlashModeButton_ && [flashModeButton_ isDescendantOfView:self] == NO){
         flashModeButton_.frame = CGRectMake(PICKER_PADDING_X, PICKER_PADDING_Y, PICKER_FLASHMODE_BUTTON_WIDTH, PICKER_FLASHMODE_BUTTON_HEIGHT);
-        [self.view addSubview: flashModeButton_];
+        [self addSubview: flashModeButton_];
     }
-    if(showsCameraDeviceButton_ && [cameraDeviceButton_ isDescendantOfView:self.view] == NO){        cameraDeviceButton_.frame = CGRectMake(f.size.width - PICKER_CAMERADEVICE_BUTTON_WIDTH - PICKER_PADDING_X, PICKER_PADDING_Y, PICKER_CAMERADEVICE_BUTTON_WIDTH, PICKER_CAMERADEVICE_BUTTON_HEIGHT);
-        [self.view addSubview: cameraDeviceButton_];
+    if(showsCameraDeviceButton_ && [cameraDeviceButton_ isDescendantOfView:self] == NO){        cameraDeviceButton_.frame = CGRectMake(f.size.width - PICKER_CAMERADEVICE_BUTTON_WIDTH - PICKER_PADDING_X, PICKER_PADDING_Y, PICKER_CAMERADEVICE_BUTTON_WIDTH, PICKER_CAMERADEVICE_BUTTON_HEIGHT);
+        [self addSubview: cameraDeviceButton_];
     }
 }
 
@@ -174,7 +175,7 @@
     if(useTapToFocus_ == NO){
         return;
     }
-    CGPoint point = [recognizer locationInView:self.view];
+    CGPoint point = [recognizer locationInView:self];
     
     indicatorLayer_.frame = CGRectMake(point.x - INDICATOR_RECT_SIZE /2.0,
                                        point.y - INDICATOR_RECT_SIZE /2.0,
@@ -254,7 +255,7 @@
     [CATransaction commit];
     lastPinchScale_ = pinchScale;
     
-    if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didScaledTo:viewRect:)]){
+    if([self.delegate respondsToSelector:@selector(cameraController:didScaledTo:viewRect:)]){
         [self.delegate cameraController:self didScaledTo:scale_ viewRect:CGRectMake(fabsf(rect.origin.x / scale_), fabsf(rect.origin.y / scale_), defaultBounds_.size.width, defaultBounds_.size.height)];
     }
 }
@@ -296,7 +297,7 @@
  */
 - (void)setFocus:(CGPoint)p
 {
-    CGSize viewSize = self.view.bounds.size;
+    CGSize viewSize = self.bounds.size;
     pointOfInterest_ = p;
     CGPoint pointOfInterest = CGPointMake(p.y / viewSize.height,
                                           1.0 - p.x / viewSize.width);
@@ -375,7 +376,7 @@
 //-----------------------------------------------------------------------------
 //Public Implementations
 //-----------------------------------------------------------------------------
-@implementation AVFoundationCameraController
+@implementation ENGAVFoundationCameraController
 @synthesize delegate;
 @synthesize showsCameraControls = showsCameraControls_;
 @synthesize showsCameraDeviceButton = showsCameraDeviceButton_;
@@ -385,18 +386,24 @@
 
 #pragma mark -
 #pragma mark public implementation
-/*!
- * initializer
- * @param frame
- */
-- (id)initWithFrame:(CGRect)frame{
-    self = [super init];
-    if(self){
-        [self setupInitialState:frame];
+
+-(void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+    if(self.frame.size.width != 0 && self.frame.size.height != 0){
+        [self setupInitialState:self.frame];
     }
-    return self;
 }
 
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    if(self.frame.size.width != 0 && self.frame.size.height != 0){
+        [self setupInitialState:self.frame];
+    }
+}
 
 /*!
  * take picture
@@ -423,10 +430,10 @@
          NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
          UIImage *image = [[UIImage alloc] initWithData:imageData];
          
-         if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didFinishPickingImage:)]){
+         if([self.delegate respondsToSelector:@selector(cameraController:didFinishPickingImage:)]){
              [self.delegate cameraController:self didFinishPickingImage:image];
          }
-         if([self.delegate respondsToSelector:@selector(emulatedImagePickerController:didFinishPickingImage:metadata:)]){
+         if([self.delegate respondsToSelector:@selector(cameraController:didFinishPickingImage:metadata:)]){
              [self.delegate cameraController:self didFinishPickingImage:image metadata:exifAttachments];
          }
 	 }];
