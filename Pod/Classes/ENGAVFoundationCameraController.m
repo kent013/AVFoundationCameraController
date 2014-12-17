@@ -1039,8 +1039,8 @@ NSString *kTempVideoURL = @"kTempVideoURL";
  * video data output
  */
 -(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
-    if([self.delegate respondsToSelector:@selector(cameraController:drawPreviewLayer:sampleBuffer:)]){
-        [self.delegate cameraController:self drawPreviewLayer:_previewLayer sampleBuffer:sampleBuffer];
+    if([self.delegate respondsToSelector:@selector(cameraController:drawPreviewLayer:sampleBuffer:fromConnection:)]){
+        [self.delegate cameraController:self drawPreviewLayer:_previewLayer sampleBuffer:sampleBuffer fromConnection:connection];
     }
 }
 

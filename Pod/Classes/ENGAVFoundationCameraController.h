@@ -116,7 +116,7 @@ typedef enum {
  * delegate with image and metadata
  */
 - (void) cameraController:(ENGAVFoundationCameraController *)cameraController didFinishPickingImage:(UIImage *)image;
-- (BOOL) cameraController:(ENGAVFoundationCameraController *)cameraController drawPreviewLayer:(AVCaptureVideoPreviewLayer *)layer sampleBuffer:(CMSampleBufferRef) sampleBuffer;
+- (void) cameraController:(ENGAVFoundationCameraController *)cameraController drawPreviewLayer:(AVCaptureVideoPreviewLayer *)layer sampleBuffer:(CMSampleBufferRef) sampleBuffer fromConnection:(AVCaptureConnection *)connection;
 /*!
  * capture video
  */
