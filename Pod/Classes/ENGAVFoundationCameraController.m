@@ -918,6 +918,7 @@ NSString *kTempVideoURL = @"kTempVideoURL";
     }else{
         _videoElapsedTimeLabel.font = [UIFont systemFontOfSize:16];
     }
+    self.pixelFormat = pixelFormat;
     self.stillCameraMethod = stillCameraMethod;
     self.mode = mode;
     [self updateCameraControls];
@@ -1150,7 +1151,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)anOutputFileURL
         if(self.mode != ENGAVFoundationCameraModePhoto){
             return;
         }
-        self.stillCameraMethod = stillCameraMethod;
+        _stillCameraMethod = stillCameraMethod;
         
         NSError *error = nil;
         if(_device.isFlashAvailable){
