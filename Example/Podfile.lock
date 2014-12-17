@@ -1,7 +1,9 @@
 PODS:
-  - AVFoundationCameraController (0.1.0)
+  - AVFoundationCameraController (0.1.0):
+    - UIImage-ResizeNCrop
   - Expecta (0.3.1)
   - Specta (0.2.1)
+  - UIImage-ResizeNCrop (0.0.5)
 
 DEPENDENCIES:
   - AVFoundationCameraController (from `../`)
@@ -13,8 +15,9 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  AVFoundationCameraController: fead4ca5d7a9a7abec413990e9da72cae8238e82
+  AVFoundationCameraController: 0e6b15c7c2b90ab3bc241f787272da0f8c1b760c
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   Specta: 9141310f46b1f68b676650ff2854e1ed0b74163a
+  UIImage-ResizeNCrop: eab2888c725f861b9491280a5c16d3d9a2186739
 
 COCOAPODS: 0.35.0

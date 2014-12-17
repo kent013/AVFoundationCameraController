@@ -19,8 +19,9 @@
 {
     [super viewDidLoad];
     self.cameraView.delegate = self;
-    self.cameraView.showsCameraControls = NO;
-	// Do any additional setup after loading the view, typically from a nib.
+    [self.cameraView setupInitialState:self.view.frame cameraMode:ENGAVFoundationCameraModePhoto stillCameraMethod:ENGAVFoundationStillCameraMethodStandard pixelFormat:kCVPixelFormatType_32BGRA];
+    self.cameraView.photoPreset = AVCaptureSessionPresetiFrame960x540;
+    [self.cameraView start];
 }
 
 - (void)didReceiveMemoryWarning
